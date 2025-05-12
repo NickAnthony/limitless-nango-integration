@@ -1,0 +1,70 @@
+integrations:
+  limitless-integration:
+    syncs:
+      fetch-lifelogs:
+        description: |
+          Fetches Lifelog entries from the Limitless API.
+          Details: full sync, returns list of lifelogs based on specified parameters.
+        endpoint:
+          method: GET
+          path: /v1/lifelogs
+        sync_type: full
+        track_deletes: false
+        runs: every hour
+        auto_start: true
+        output: LifelogList
+        
+      fetch-lifelog-by-id:
+        description: |
+          Fetches a specific Lifelog entry by ID from the Limitless API.
+        endpoint:
+          method: GET
+          path: /v1/lifelogs/:id
+        sync_type: full
+        track_deletes: false
+        runs: every 365 days
+        auto_start: false
+        output: LifelogSingle
+
+models:
+  # Models that match the OpenAPI spec exactly
+  ContentNode:
+    type: string
+    content: string
+    startTime: string
+    endTime: string
+    startOffsetMs: integer
+    endOffsetMs: integer
+    children: array<ContentNode>
+    speakerName: string
+    speakerIdentifier: string
+    
+  LifelogBase:
+    id: string
+    title: string
+    markdown: string
+    contents: array<ContentNode>
+    startTime: string
+    endTime: string
+    
+  LifelogList:
+    id: string
+    data: array<LifelogBase>
+    
+  LifelogSingle:
+    id: string
+    data: LifelogBase
+    
+  MetaLifelogs:
+    nextCursor: string
+    count: integer
+    
+  Meta:
+    lifelogs: MetaLifelogs
+    
+  LifelogsResponseData:
+    lifelogs: array<LifelogBase>
+    
+  LifelogsResponse:
+    data: LifelogsResponseData
+    meta: Meta

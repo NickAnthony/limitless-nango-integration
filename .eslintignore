@@ -1,0 +1,3 @@
+# Ignore Nango generated files
+nango-integrations/models.ts
+# Add other Nango generated files patterns here if needed
